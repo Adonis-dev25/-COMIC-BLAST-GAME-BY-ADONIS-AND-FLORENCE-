@@ -1,0 +1,1964 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BORNFACE ❤️ FLORENCE ❤️ - Elite Zombie Slayer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script><!-- MULTIPLE BACKGROUND MUSIC TRACKS FOR CONTINUOUS PLAY -->
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full w-full">
+  <audio id="bgm1" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="bgm2" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="bgm3" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="bgm4" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="bgm5" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" type="audio/mpeg">
+  </audio><!-- AMBIENT BACKGROUND AUDIO LAYER -->
+  <audio id="ambient" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" type="audio/mpeg">
+  </audio><!-- BOSS BATTLE THEME -->
+  <audio id="bossBattle" preload="auto" loop style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" type="audio/mpeg">
+  </audio><!-- VICTORY THEME -->
+  <audio id="victoryTheme" preload="auto" style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+  </audio><!-- WAVE COMPLETE SOUND -->
+  <audio id="waveComplete" preload="auto" style="display: none;"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" type="audio/mpeg">
+  </audio>
+  <style>
+    * { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a15;
+      color: #fff;
+      box-sizing: border-box;
+    }
+    
+    @keyframes pulse-glow { 0%, 100% { text-shadow: 0 0 10px rgba(255, 0, 100, 0.6); } 50% { text-shadow: 0 0 20px rgba(255, 0, 100, 0.9); } }
+    @keyframes slide-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes float-vertical { 0% { transform: translateY(-120vh); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(120vh); opacity: 0; } }
+    @keyframes float-horizontal { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(40vw); } 50% { transform: translateX(-40vw); } 75% { transform: translateX(30vw); } }
+    @keyframes pulse-intense { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.8; } }
+    @keyframes boss-appear { 0% { transform: scale(0) rotate(-180deg); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    @keyframes floating-text { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-80px); } }
+    
+    .brand-float {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      font-weight: 900;
+      font-size: 18px;
+      text-shadow: 0 0 20px rgba(255, 0, 100, 0.8), 0 0 40px rgba(0, 255, 200, 0.6);
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ff0080, #ff6600, #00ffaa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: float-vertical 8s infinite linear, float-horizontal 12s infinite ease-in-out;
+      pointer-events: none;
+      display: none;
+    }
+    
+    #gameCanvas { 
+      display: block; 
+      width: 100%; 
+      height: 100%; 
+      touch-action: none; 
+      background: url('https://images.unsplash.com/photo-1538185519336-c6e46ad9878d?w=1920&h=1080&fit=crop') center/cover no-repeat fixed, linear-gradient(135deg, #0a0e27 0%, #1a0a2e 100%);
+      background-size: cover, 100% 100%;
+      background-position: center, 0 0;
+      filter: brightness(0.95) contrast(1.05);
+    }
+    
+    .glass-panel {
+      background: rgba(10, 10, 20, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 255, 150, 0.3);
+      border-radius: 10px;
+    }
+    
+    .hud-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 6px;
+      font-size: 10px;
+      gap: 2px;
+    }
+    
+    .stat-value {
+      font-weight: 900;
+      font-size: 14px;
+      color: #00ff99;
+      text-shadow: 0 0 8px #00ff99;
+    }
+    
+    .stat-label {
+      font-size: 8px;
+      color: #00cc77;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+    }
+    
+    .progress-compact {
+      width: 100%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid #00ff99;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff99, #00ff00);
+      transition: width 0.1s;
+    }
+    
+    .menu-btn {
+      background: linear-gradient(135deg, #00ff99, #00cc77);
+      border: 2px solid #00ff99;
+      color: #000;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 0 15px rgba(0, 255, 150, 0.5);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1px;
+      padding: 8px 14px;
+      border-radius: 6px;
+    }
+    
+    .menu-btn:hover {
+      box-shadow: 0 0 25px rgba(0, 255, 150, 0.8);
+      transform: scale(1.02);
+    }
+    
+    .menu-btn:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 25px rgba(0, 255, 150, 0.8);
+    }
+    
+    .selector-item {
+      padding: 8px 10px;
+      border: 2px solid rgba(0, 255, 100, 0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(0, 0, 0, 0.6);
+      font-size: 13px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .selector-item:hover {
+      border-color: #00ff99;
+      box-shadow: 0 0 15px rgba(0, 255, 150, 0.4);
+    }
+    
+    .selector-item.selected {
+      border-color: #ff00ff;
+      background: rgba(255, 0, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+    }
+    
+    .footer-text {
+      position: fixed;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      color: #fff;
+      font-weight: 900;
+      text-shadow: 0 0 12px rgba(255, 0, 100, 0.9), 0 0 20px rgba(255, 0, 150, 0.6);
+      letter-spacing: 1.5px;
+      z-index: 999;
+      animation: pulse-glow 2s infinite;
+    }
+    
+    .mini-stat-bar {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 9px;
+      padding: 2px 4px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      border: 1px solid #00ff99;
+    }
+    
+    .toast-notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      border: 2px solid #00ff99;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 500;
+      animation: floating-text 1.2s ease-out forwards;
+      text-shadow: 0 0 8px #00ff99;
+    }
+    
+    .skill-indicator {
+      width: 28px;
+      height: 28px;
+      background: rgba(100, 0, 200, 0.3);
+      border: 2px solid #ff00ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+    }
+    
+    .skill-indicator:hover {
+      background: rgba(100, 0, 200, 0.5);
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+    }
+    
+    .skill-indicator.ready {
+      background: rgba(0, 255, 0, 0.2);
+      border-color: #00ff99;
+      box-shadow: 0 0 15px rgba(0, 255, 150, 0.7);
+    }
+    
+    .skill-indicator.cooldown {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .boss-alert {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.98);
+      border: 3px solid #ff0000;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 300;
+      animation: pulse-intense 0.5s infinite, boss-appear 0.4s ease-out;
+      text-shadow: 0 0 15px #ff0000;
+      color: #ff0000;
+    }
+    
+    .wave-alert {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      border: 2px solid #ffff00;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      z-index: 300;
+      animation: pulse-intense 0.4s infinite;
+      text-shadow: 0 0 12px #ffff00;
+      color: #ffff00;
+      text-align: center;
+    }
+
+    .audio-controls {
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 255, 150, 0.3);
+      display: none;
+    }
+
+    .audio-btn {
+      background: rgba(0, 255, 150, 0.2);
+      border: 1px solid rgba(0, 255, 150, 0.5);
+      color: #00ff99;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .audio-btn:hover {
+      background: rgba(0, 255, 150, 0.4);
+      box-shadow: 0 0 10px rgba(0, 255, 150, 0.6);
+    }
+
+    .audio-btn.off {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.5);
+      color: #ff6666;
+    }
+
+    .device-indicator {
+      position: fixed;
+      bottom: 40px;
+      right: 8px;
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid #00ff99;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #00ff99;
+      z-index: 100;
+      display: none;
+    }
+
+    /* Mobile-specific touch controls */
+    #mobileControls {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: none;
+      gap: 8px;
+      width: 95%;
+      max-width: 400px;
+    }
+
+    .mobile-skill-btn {
+      flex: 1;
+      background: rgba(100, 0, 200, 0.4);
+      border: 2px solid #ff00ff;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mobile-skill-btn:active {
+      background: rgba(100, 0, 200, 0.8);
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+    }
+
+    .joystick-container {
+      position: fixed;
+      bottom: 50px;
+      left: 20px;
+      z-index: 30;
+      display: none;
+      width: 100px;
+      height: 100px;
+      background: rgba(0, 255, 150, 0.1);
+      border: 2px solid rgba(0, 255, 150, 0.3);
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .joystick-stick {
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 255, 150, 0.4);
+      border: 2px solid rgba(0, 255, 150, 0.6);
+      border-radius: 50%;
+      position: absolute;
+      transition: all 0.05s;
+    }
+
+    @media (max-width: 1024px) {
+      .hud-stat { font-size: 9px; padding: 3px 4px; }
+      .stat-value { font-size: 12px; }
+      .stat-label { font-size: 7px; }
+    }
+
+    @media (max-width: 768px) {
+      #mobileControls { display: flex; }
+      .joystick-container { display: flex; }
+      #gameScreen #audioControls { display: flex; }
+      #gameScreen .device-indicator { display: block; }
+      .hud-stat { font-size: 8px; padding: 2px 3px; }
+      .stat-value { font-size: 10px; }
+      .stat-label { font-size: 6px; }
+      .skill-indicator { width: 24px; height: 24px; font-size: 10px; }
+    }
+
+    /* Menu Styling */
+    .menu-container {
+      animation: slide-in 0.5s ease-out;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .menu-header {
+      background: linear-gradient(135deg, rgba(255, 0, 100, 0.15), rgba(0, 255, 200, 0.1));
+      border: 2px solid rgba(0, 255, 150, 0.4);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .menu-section {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 150, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .menu-section-title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      color: #00ff99;
+      text-shadow: 0 0 8px rgba(0, 255, 150, 0.6);
+    }
+
+    .menu-grid {
+      display: grid;
+      gap: 6px;
+    }
+
+    .game-is-running #audioControls {
+      display: flex;
+    }
+
+    .game-is-running .device-indicator {
+      display: block;
+    }
+
+    .game-is-running .brand-float {
+      display: none;
+    }
+
+    .game-is-running #mainMenu {
+      display: none;
+    }
+  </style>
+  <div id="app" class="h-full w-full relative"><!-- Animated Branding (Menu Only) -->
+   <div class="brand-float">
+    BORNFACE ❤️ FLORENCE ❤️😘
+   </div><!-- Device Indicator -->
+   <div id="deviceIndicator" class="device-indicator">
+    Desktop
+   </div><!-- Audio Controls -->
+   <div id="audioControls" class="audio-controls"><button id="bgmToggle" class="audio-btn" title="Background Music">🎵 BGM</button> <button id="ambientToggle" class="audio-btn" title="Ambient Sound">🌍 AMB</button> <button id="sfxToggle" class="audio-btn" title="Sound Effects">🔊 SFX</button> <button id="masterToggle" class="audio-btn" title="Master Volume">🔇 MUTE</button>
+   </div><!-- Main Menu -->
+   <div id="mainMenu" class="h-full w-full absolute inset-0 flex flex-col items-center justify-center z-50 p-4" style="background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f1030 100%);">
+    <div class="menu-container"><!-- Header -->
+     <div class="menu-header">
+      <h1 class="text-2xl font-black mb-1" style="background: linear-gradient(135deg, #ff0080, #ff6600, #00ffaa); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 2px;">⚡ ELITE SLAYER ⚡</h1>
+      <p class="text-xs text-cyan-300 mb-1">MULTI-DEVICE • PROFESSIONAL • INTENSE</p>
+      <p class="text-xs text-pink-300">🎮 Advanced Audio System Enabled 🎵</p>
+     </div><!-- Avatar Selection -->
+     <div class="menu-section">
+      <div class="menu-section-title">
+       🎭 SELECT AVATAR
+      </div>
+      <div class="menu-grid" style="grid-template-columns: repeat(4, 1fr);">
+       <div class="selector-item selected text-xl" data-avatar="😎" style="aspect-ratio: 1;">
+        😎
+       </div>
+       <div class="selector-item text-xl" data-avatar="🤖">
+        🤖
+       </div>
+       <div class="selector-item text-xl" data-avatar="👨‍🚀">
+        👨‍🚀
+       </div>
+       <div class="selector-item text-xl" data-avatar="🧔">
+        🧔
+       </div>
+       <div class="selector-item text-xl" data-avatar="👩‍🦸">
+        👩‍🦸
+       </div>
+       <div class="selector-item text-xl" data-avatar="🤠">
+        🤠
+       </div>
+       <div class="selector-item text-xl" data-avatar="👽">
+        👽
+       </div>
+       <div class="selector-item text-xl" data-avatar="🧙">
+        🧙
+       </div>
+      </div>
+     </div><!-- Weapon Selection -->
+     <div class="menu-section">
+      <div class="menu-section-title">
+       🔫 WEAPON ARSENAL
+      </div>
+      <div class="menu-grid" style="grid-template-columns: repeat(2, 1fr);">
+       <div class="selector-item selected text-xs" data-weapon="pistol" data-dmg="15" data-rof="3">
+        🔫<br>
+        PISTOL<br>
+        ⚡ Fast
+       </div>
+       <div class="selector-item text-xs" data-weapon="rifle" data-dmg="35" data-rof="6">
+        🎯<br>
+        RIFLE<br>
+        ⚡⚡ Balanced
+       </div>
+       <div class="selector-item text-xs" data-weapon="sniper" data-dmg="80" data-rof="15">
+        🎖️<br>
+        SNIPER<br>
+        ⚡⚡⚡ Powerful
+       </div>
+       <div class="selector-item text-xs" data-weapon="shotgun" data-dmg="50" data-rof="10">
+        💣<br>
+        SHOTGUN<br>
+        ⚡⚡ Spread
+       </div>
+      </div>
+     </div><!-- Difficulty Selection -->
+     <div class="menu-section">
+      <div class="menu-section-title">
+       ⚡ DIFFICULTY LEVEL
+      </div>
+      <div class="menu-grid" style="grid-template-columns: repeat(2, 1fr);">
+       <div class="selector-item selected text-xs" data-difficulty="easy">
+        EASY<br>
+        1.0x
+       </div>
+       <div class="selector-item text-xs" data-difficulty="normal">
+        NORMAL<br>
+        1.5x
+       </div>
+       <div class="selector-item text-xs" data-difficulty="hard">
+        HARD<br>
+        2.5x
+       </div>
+       <div class="selector-item text-xs" data-difficulty="insane">
+        INSANE<br>
+        5.0x
+       </div>
+      </div>
+     </div><!-- Player Name -->
+     <div class="menu-section">
+      <div class="menu-section-title">
+       🎯 FIGHTER NAME
+      </div><input type="text" id="playerNameInput" placeholder="Enter your name" class="w-full bg-black/70 border-2 border-green-400 text-green-400 p-2 rounded text-center font-bold text-sm" maxlength="15">
+     </div><!-- Start Button --> <button id="startBtn" class="menu-btn w-full mb-3">▶️ START BATTLE</button> <!-- Leaderboard -->
+     <div class="menu-section">
+      <div class="menu-section-title">
+       🏆 TOP PLAYERS
+      </div>
+      <div id="leaderboardList" class="space-y-1 max-h-28 overflow-y-auto text-xs">
+       <p class="text-gray-500 text-center py-2">Loading scores...</p>
+      </div>
+     </div>
+    </div>
+   </div><!-- Game Screen -->
+   <div id="gameScreen" class="h-full w-full absolute inset-0 hidden">
+    <canvas id="gameCanvas"></canvas><!-- Top HUD -->
+    <div class="absolute top-1 left-1 right-1 z-20">
+     <div class="glass-panel">
+      <div class="grid grid-cols-11 gap-0.5 p-1">
+       <div class="hud-stat">
+        <div class="stat-label">
+         SCORE
+        </div>
+        <div id="scoreDisplay" class="stat-value text-xs">
+         0
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         LVL
+        </div>
+        <div id="levelDisplay" class="stat-value text-xs">
+         1
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         WV
+        </div>
+        <div id="waveDisplay" class="stat-value text-xs">
+         1
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         ZMB
+        </div>
+        <div id="zombieCountDisplay" class="stat-value text-xs">
+         0
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         KILLS
+        </div>
+        <div id="killCountDisplay" class="stat-value text-xs">
+         0
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         CMB
+        </div>
+        <div id="comboDisplay" class="stat-value text-xs">
+         1x
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         HP
+        </div>
+        <div id="healthDisplay" class="stat-value text-xs">
+         100
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         AMO
+        </div>
+        <div id="ammoDisplay" class="stat-value text-xs">
+         30
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         MUL
+        </div>
+        <div id="multiplierDisplay" class="stat-value text-xs">
+         1.0x
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         TIME
+        </div>
+        <div id="timeDisplay" class="stat-value text-xs">
+         0:00
+        </div>
+       </div>
+       <div class="hud-stat">
+        <div class="stat-label">
+         SPD
+        </div>
+        <div id="spawnSpeedDisplay" class="stat-value text-xs">
+         1x
+        </div>
+       </div>
+      </div>
+      <div class="progress-compact">
+       <div id="waveProgress" class="progress-fill" style="width: 0%"></div>
+      </div>
+     </div>
+    </div><!-- Skills Panel (Desktop) -->
+    <div class="absolute top-1 right-1 z-20 flex gap-1" id="desktopSkills" style="display: none;">
+     <div class="skill-indicator ready" id="skill1" data-skill="timefreeze" title="TIME FREEZE [Q]">
+      ❄️
+     </div>
+     <div class="skill-indicator ready" id="skill2" data-skill="explosive" title="EXPLOSION [E]">
+      💥
+     </div>
+     <div class="skill-indicator ready" id="skill3" data-skill="heal" title="HEAL [R]">
+      💚
+     </div>
+    </div><!-- Bottom HUD -->
+    <div class="absolute bottom-12 left-1 right-1 z-20">
+     <div class="glass-panel p-1">
+      <div class="mini-stat-bar"><span class="text-cyan-400">⚡ AMMO:</span> <span id="ammoBar" class="text-yellow-400">30/30</span>
+       <div class="progress-compact flex-1" style="min-width: 60px;">
+        <div id="ammoBarFill" class="progress-fill" style="width: 100%"></div>
+       </div>
+      </div>
+      <div id="powerUpDisplay" class="text-xs text-yellow-400 mt-0.5 text-center font-bold"></div>
+     </div>
+    </div><!-- Mobile Joystick (Left Side) -->
+    <div id="joystickContainer" class="joystick-container">
+     <div id="joystickStick" class="joystick-stick"></div>
+    </div><!-- Mobile Touch Controls (Bottom) -->
+    <div id="mobileControls"><button id="mobileSkill1" class="mobile-skill-btn">❄️ FREEZE<br>
+      [Q]</button> <button id="mobileSkill2" class="mobile-skill-btn">💥 EXPLODE<br>
+      [E]</button> <button id="mobileSkill3" class="mobile-skill-btn">💚 HEAL<br>
+      [R]</button>
+    </div>
+   </div><!-- Pause Menu -->
+   <div id="pauseMenu" class="absolute inset-0 hidden z-40 flex items-center justify-center bg-black/85" style="backdrop-filter: blur(8px);">
+    <div class="glass-panel rounded-lg p-4 text-center max-w-xs">
+     <h2 class="text-lg text-yellow-400 font-black mb-2">⏸️ PAUSED</h2>
+     <div id="pauseStats" class="text-green-400 text-xs mb-3 space-y-0.5"></div>
+     <div class="flex flex-col gap-2"><button id="resumeBtn" class="menu-btn w-full">▶️ CONTINUE</button> <button id="quitBtn" class="selector-item w-full text-red-400 border-red-500 text-xs">EXIT TO MENU</button>
+     </div>
+    </div>
+   </div><!-- Game Over Screen -->
+   <div id="gameOverScreen" class="absolute inset-0 hidden z-40 flex items-center justify-center bg-black/90 p-2 overflow-y-auto" style="backdrop-filter: blur(8px);">
+    <div class="glass-panel rounded-lg p-4 text-center max-w-xs">
+     <h2 class="text-lg text-red-500 font-black mb-2">💀 MISSION FAILED 💀</h2>
+     <div class="glass-panel rounded-lg p-2 mb-2 bg-black/50 text-xs space-y-1">
+      <div class="flex justify-between text-green-400">
+       <span>SCORE:</span><span id="finalScore" class="font-bold">0</span>
+      </div>
+      <div class="flex justify-between text-green-400">
+       <span>LEVEL:</span><span id="finalLevel" class="font-bold">1</span>
+      </div>
+      <div class="flex justify-between text-green-400">
+       <span>ZOMBIES:</span><span id="finalZombies" class="font-bold">0</span>
+      </div>
+      <div class="flex justify-between text-green-400">
+       <span>TIME:</span><span id="finalTime" class="font-bold">0m</span>
+      </div>
+      <div id="newHighScoreAlert" class="hidden text-yellow-400 font-black text-xs mt-1">
+       🏆 NEW HIGH SCORE! 🏆
+      </div>
+     </div>
+     <div class="flex flex-col gap-2"><button id="playAgainBtn" class="menu-btn w-full text-xs">🔄 RETRY</button> <button id="mainMenuBtn" class="selector-item w-full text-green-400 border-green-400 text-xs">🏠 MENU</button>
+     </div>
+    </div>
+   </div><!-- Boss Alert -->
+   <div id="bossAlert" class="boss-alert hidden">
+    ⚠️ BOSS INCOMING ⚠️
+   </div><!-- Wave Alert -->
+   <div id="waveAlert" class="wave-alert hidden"></div><!-- Toast Notifications -->
+   <div id="toastContainer" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"></div><!-- Footer Branding -->
+   <div class="footer-text">
+    BORNFACE ❤️ FLORENCE ❤️😘
+   </div>
+  </div>
+  <script>
+    // DEVICE DETECTION
+    class DeviceDetector {
+      constructor() {
+        this.detect();
+      }
+
+      detect() {
+        const ua = navigator.userAgent;
+        const isAndroid = /Android/i.test(ua);
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+        const isTablet = /iPad|Android(?!.*Mobile)/i.test(ua);
+        const isMobile = isAndroid || isIOS;
+        
+        this.isMobile = isMobile;
+        this.isTablet = isTablet;
+        this.isDesktop = !isMobile;
+        this.isAndroid = isAndroid;
+        this.isIOS = isIOS;
+        this.screenWidth = window.innerWidth;
+        this.screenHeight = window.innerHeight;
+        
+        this.updateIndicator();
+      }
+
+      updateIndicator() {
+        let label = 'Desktop';
+        if (this.isTablet) label = `${this.isAndroid ? 'Android' : 'iPad'} Tablet`;
+        else if (this.isMobile) label = `${this.isAndroid ? 'Android' : 'iPhone'} Mobile`;
+        
+        document.getElementById('deviceIndicator').textContent = `${label} (${this.screenWidth}x${this.screenHeight})`;
+      }
+    }
+
+    const device = new DeviceDetector();
+
+    // ADVANCED MULTI-AUDIO ENGINE WITH TRACK ROTATION
+    class AdvancedAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.initialized = false;
+        this.masterVolume = 0.4;
+        this.bgmVolume = 0.25;
+        this.ambientVolume = 0.15;
+        this.sfxVolume = 0.35;
+        this.bgmEnabled = true;
+        this.ambientEnabled = true;
+        this.sfxEnabled = true;
+        
+        this.bgmTracks = [];
+        this.currentBgmIndex = 0;
+        this.bgmElement = null;
+        this.ambientElement = document.getElementById('ambient');
+        this.bossBattleElement = document.getElementById('bossBattle');
+        this.victoryElement = document.getElementById('victoryTheme');
+        this.waveCompleteElement = document.getElementById('waveComplete');
+        this.isBossBattleActive = false;
+      }
+      
+      init() {
+        if (this.initialized) return;
+        try {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          this.initialized = true;
+        } catch (e) { console.warn('Web Audio API unavailable'); }
+
+        // Load all BGM tracks
+        for (let i = 1; i <= 5; i++) {
+          const elem = document.getElementById(`bgm${i}`);
+          if (elem) this.bgmTracks.push(elem);
+        }
+
+        this.setupAudio();
+      }
+
+      setupAudio() {
+        if (this.bgmTracks.length > 0) {
+          this.bgmElement = this.bgmTracks[0];
+          this.bgmElement.volume = this.bgmVolume * this.masterVolume;
+        }
+        if (this.ambientElement) {
+          this.ambientElement.volume = this.ambientVolume * this.masterVolume;
+        }
+      }
+
+      playBGM() {
+        if (!this.bgmElement || !this.bgmEnabled || !this.bgmElement.src) return;
+        this.bgmElement.volume = this.bgmVolume * this.masterVolume;
+        this.bgmElement.play().catch(() => {});
+        
+        this.bgmElement.onended = () => this.nextBgmTrack();
+      }
+
+      pauseBGM() {
+        if (this.bgmElement) this.bgmElement.pause();
+      }
+
+      nextBgmTrack() {
+        if (this.bgmTracks.length === 0) return;
+        
+        this.currentBgmIndex = (this.currentBgmIndex + 1) % this.bgmTracks.length;
+        this.bgmElement = this.bgmTracks[this.currentBgmIndex];
+        this.bgmElement.volume = this.bgmVolume * this.masterVolume;
+        
+        if (this.bgmEnabled) {
+          this.bgmElement.play().catch(() => {});
+        }
+      }
+
+      playAmbient() {
+        if (!this.ambientElement || !this.ambientEnabled || !this.ambientElement.src) return;
+        this.ambientElement.volume = this.ambientVolume * this.masterVolume;
+        this.ambientElement.play().catch(() => {});
+      }
+
+      pauseAmbient() {
+        if (this.ambientElement) this.ambientElement.pause();
+      }
+
+      startBossBattle() {
+        if (this.isBossBattleActive) return;
+        this.isBossBattleActive = true;
+        this.pauseBGM();
+        this.pauseAmbient();
+        
+        if (this.bossBattleElement && this.bossBattleElement.src) {
+          this.bossBattleElement.volume = this.bgmVolume * this.masterVolume;
+          this.bossBattleElement.play().catch(() => {});
+        }
+      }
+
+      endBossBattle() {
+        if (!this.isBossBattleActive) return;
+        this.isBossBattleActive = false;
+        
+        if (this.bossBattleElement) this.bossBattleElement.pause();
+        if (this.bgmEnabled) this.playBGM();
+        if (this.ambientEnabled) this.playAmbient();
+      }
+
+      playVictory() {
+        if (this.victoryElement && this.victoryElement.src) {
+          this.victoryElement.volume = this.bgmVolume * this.masterVolume;
+          this.victoryElement.play().catch(() => {});
+        }
+      }
+
+      playWaveComplete() {
+        if (this.waveCompleteElement && this.waveCompleteElement.src && this.sfxEnabled) {
+          this.waveCompleteElement.volume = this.sfxVolume * this.masterVolume;
+          this.waveCompleteElement.play().catch(() => {});
+        }
+      }
+
+      toggleBGM() {
+        this.bgmEnabled = !this.bgmEnabled;
+        if (this.bgmEnabled) this.playBGM();
+        else this.pauseBGM();
+        return this.bgmEnabled;
+      }
+
+      toggleAmbient() {
+        this.ambientEnabled = !this.ambientEnabled;
+        if (this.ambientEnabled) this.playAmbient();
+        else this.pauseAmbient();
+        return this.ambientEnabled;
+      }
+
+      toggleSFX() {
+        this.sfxEnabled = !this.sfxEnabled;
+        return this.sfxEnabled;
+      }
+
+      toggleMaster() {
+        this.masterVolume = this.masterVolume > 0 ? 0 : 0.4;
+        if (this.bgmElement) this.bgmElement.volume = this.bgmVolume * this.masterVolume;
+        if (this.ambientElement) this.ambientElement.volume = this.ambientVolume * this.masterVolume;
+        if (this.bossBattleElement) this.bossBattleElement.volume = this.bgmVolume * this.masterVolume;
+        return this.masterVolume > 0;
+      }
+      
+      playTone(freq, duration, type = 'sine', vol = 0.15, envelope = {}) {
+        if (!this.ctx || !this.sfxEnabled) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
+          
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.frequency.value = freq;
+          osc.type = type;
+          
+          const attackTime = envelope.attack || 0.01;
+          const decayTime = envelope.decay || duration * 0.3;
+          const sustainLevel = envelope.sustain || 0.7;
+          const releaseTime = envelope.release || duration * 0.3;
+          
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(vol * this.masterVolume * this.sfxVolume, now + attackTime);
+          gain.gain.linearRampToValueAtTime(sustainLevel * vol * this.masterVolume * this.sfxVolume, now + attackTime + decayTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration - releaseTime);
+          
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(freq * 2, now);
+          filter.frequency.exponentialRampToValueAtTime(freq * 0.3, now + duration);
+          
+          osc.start(now);
+          osc.stop(now + duration);
+        } catch (e) {}
+      }
+      
+      gunshot(type = 'normal') {
+        if (!this.ctx || !this.sfxEnabled) return;
+        const now = this.ctx.currentTime;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
+          
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.type = 'sine';
+          const baseFreq = type === 'sniper' ? 150 : type === 'shotgun' ? 200 : type === 'rifle' ? 180 : 160;
+          osc.frequency.setValueAtTime(baseFreq * 1.2, now);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.3, now + 0.12);
+          
+          gain.gain.setValueAtTime(0.2 * this.masterVolume * this.sfxVolume, now);
+          gain.gain.exponentialRampToValueAtTime(0.05 * this.masterVolume * this.sfxVolume, now + 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          
+          filter.type = 'highpass';
+          filter.frequency.setValueAtTime(200, now);
+          filter.frequency.exponentialRampToValueAtTime(100, now + 0.12);
+          
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } catch (e) {}
+      }
+
+      reload() {
+        if (!this.sfxEnabled) return;
+        const notes = [200, 250, 180, 220];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 0.1, 'square', 0.12, { attack: 0.02, decay: 0.05 }), i * 60);
+        });
+      }
+      
+      skillActivate() {
+        if (!this.sfxEnabled) return;
+        const notes = [900, 1100, 1350];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 0.12, 'sine', 0.18, { attack: 0.01, decay: 0.08 }), i * 40);
+        });
+      }
+
+      zombieHit() {
+        if (!this.sfxEnabled) return;
+        this.playTone(120, 0.15, 'sine', 0.2);
+        setTimeout(() => this.playTone(100, 0.15, 'sine', 0.15), 50);
+      }
+
+      criticalHit() {
+        if (!this.sfxEnabled) return;
+        const notes = [600, 800, 1000];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 0.08, 'square', 0.2, { attack: 0.01, decay: 0.06 }), i * 30);
+        });
+      }
+
+      waveUp() {
+        if (!this.sfxEnabled) return;
+        this.playWaveComplete();
+        const sequence = [400, 500, 600, 800, 1000];
+        sequence.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 0.15, 'sine', 0.2, { attack: 0.02, decay: 0.1 }), i * 100);
+        });
+      }
+
+      gameOver() {
+        if (!this.sfxEnabled) return;
+        const sequence = [800, 600, 400, 200];
+        sequence.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 0.3, 'sine', 0.25, { attack: 0.05, decay: 0.2 }), i * 120);
+        });
+      }
+
+      powerUp() {
+        if (!this.sfxEnabled) return;
+        const sequence = [1200, 1600, 1200, 1600];
+        sequence.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 0.08, 'sine', 0.18, { attack: 0.01, decay: 0.05 }), i * 50);
+        });
+      }
+    }
+    
+    // Main Game Engine
+    class EliteSlayerGame {
+      constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d', { antialias: true });
+        this.audio = new AdvancedAudioEngine();
+        
+        this.initState();
+        this.setupControls();
+        this.setupMobileControls();
+        this.resize();
+      }
+      
+      initState() {
+        this.player = null;
+        this.bullets = [];
+        this.zombies = [];
+        this.particles = [];
+        this.powerUps = [];
+        
+        this.score = 0;
+        this.level = 1;
+        this.health = 100;
+        this.maxHealth = 100;
+        this.wave = 1;
+        this.combo = 1;
+        this.kills = 0;
+        this.ammo = 30;
+        this.maxAmmo = 30;
+        
+        this.isRunning = false;
+        this.isPaused = false;
+        this.gameStartTime = 0;
+        this.elapsedTime = 0;
+        
+        this.mouse = { x: 0, y: 0 };
+        this.shootCooldown = 0;
+        this.zombieSpawnTimer = 0;
+        this.waveZombiesKilled = 0;
+        this.waveZombiesRequired = 50;
+        this.activeZombies = 0;
+        this.maxSimultaneousZombies = 500;
+        
+        this.selectedAvatar = '😎';
+        this.selectedWeapon = 'pistol';
+        this.selectedDifficulty = 'easy';
+        this.playerName = 'FIGHTER';
+        
+        this.weapon = { damage: 15, rof: 3, name: 'Pistol' };
+        this.diffSettings = { mult: 1.0, enemyMult: 1.0, spawnMult: 1.0 };
+        this.multiplier = 1.0;
+        
+        this.skills = {
+          timefreeze: { cooldown: 0, maxCooldown: 100 },
+          explosive: { cooldown: 0, maxCooldown: 80 },
+          heal: { cooldown: 0, maxCooldown: 120 }
+        };
+        
+        this.timeFrozen = false;
+        this.freezeTimer = 0;
+        this.powerUpActive = null;
+        this.powerUpTimer = 0;
+        this.comboTimer = 0;
+        this.spawnSpeedMultiplier = 1.0;
+
+        // Mobile joystick
+        this.joystickPressed = false;
+        this.joystickX = 0;
+        this.joystickY = 0;
+      }
+      
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+      
+      setupControls() {
+        if (device.isDesktop) {
+          document.getElementById('desktopSkills').style.display = 'flex';
+          
+          this.canvas.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+          });
+          
+          this.canvas.addEventListener('click', () => this.shoot());
+          
+          document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'q') this.activateSkill('timefreeze');
+            if (e.key.toLowerCase() === 'e') this.activateSkill('explosive');
+            if (e.key.toLowerCase() === 'r') this.activateSkill('heal');
+            if (e.key === 'Escape') this.togglePause();
+          });
+        } else {
+          document.getElementById('desktopSkills').style.display = 'none';
+        }
+        
+        window.addEventListener('resize', () => this.resize());
+      }
+
+      setupMobileControls() {
+        if (device.isMobile) {
+          const joystickContainer = document.getElementById('joystickContainer');
+          const joystickStick = document.getElementById('joystickStick');
+          
+          joystickContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.joystickPressed = true;
+            this.handleJoystickInput(e);
+          });
+          
+          joystickContainer.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (this.joystickPressed) this.handleJoystickInput(e);
+          });
+          
+          joystickContainer.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.joystickPressed = false;
+            joystickStick.style.transform = 'translate(0, 0)';
+          });
+
+          // Canvas tap to shoot
+          this.canvas.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            this.mouse.x = touch.clientX;
+            this.mouse.y = touch.clientY;
+            this.shoot();
+          });
+
+          this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            this.mouse.x = touch.clientX;
+            this.mouse.y = touch.clientY;
+          }, { passive: false });
+
+          // Mobile skill buttons
+          document.getElementById('mobileSkill1').addEventListener('click', () => this.activateSkill('timefreeze'));
+          document.getElementById('mobileSkill2').addEventListener('click', () => this.activateSkill('explosive'));
+          document.getElementById('mobileSkill3').addEventListener('click', () => this.activateSkill('heal'));
+
+          // Pause on menu button
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.togglePause();
+          });
+        }
+      }
+
+      handleJoystickInput(e) {
+        const joystickContainer = document.getElementById('joystickContainer');
+        const joystickStick = document.getElementById('joystickStick');
+        const touch = e.touches[0];
+        
+        const rect = joystickContainer.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        let dx = touch.clientX - centerX;
+        let dy = touch.clientY - centerY;
+        const dist = Math.hypot(dx, dy);
+        const maxDist = 25;
+        
+        if (dist > maxDist) {
+          dx = (dx / dist) * maxDist;
+          dy = (dy / dist) * maxDist;
+        }
+        
+        joystickStick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        
+        this.joystickX = dx / maxDist;
+        this.joystickY = dy / maxDist;
+        
+        if (Math.hypot(this.joystickX, this.joystickY) > 0.7) {
+          this.player.x += this.joystickX * this.player.speed;
+          this.player.y += this.joystickY * this.player.speed;
+        }
+      }
+      
+      start(playerName, avatar, weapon, difficulty) {
+        this.audio.init();
+        this.audio.playBGM();
+        this.audio.playAmbient();
+        this.playerName = playerName || 'FIGHTER';
+        this.selectedAvatar = avatar || '😎';
+        this.selectedWeapon = weapon || 'pistol';
+        this.selectedDifficulty = difficulty || 'easy';
+        this.gameStartTime = Date.now();
+        
+        const weapons = {
+          pistol: { damage: 15, rof: 3, name: 'Pistol' },
+          rifle: { damage: 35, rof: 6, name: 'Rifle' },
+          sniper: { damage: 80, rof: 15, name: 'Sniper' },
+          shotgun: { damage: 50, rof: 10, name: 'Shotgun' }
+        };
+        
+        const difficulties = {
+          easy: { mult: 1.0, enemyMult: 0.7, spawnMult: 1.2 },
+          normal: { mult: 1.5, enemyMult: 1.0, spawnMult: 1.8 },
+          hard: { mult: 2.5, enemyMult: 1.6, spawnMult: 2.5 },
+          insane: { mult: 5.0, enemyMult: 3.0, spawnMult: 4.0 }
+        };
+        
+        this.weapon = weapons[weapon] || weapons.pistol;
+        this.diffSettings = difficulties[difficulty] || difficulties.easy;
+        this.multiplier = this.diffSettings.mult;
+        this.spawnSpeedMultiplier = this.diffSettings.spawnMult;
+        
+        this.player = {
+          x: window.innerWidth / 2,
+          y: window.innerHeight - 60,
+          width: 40,
+          height: 40,
+          speed: device.isMobile ? 8 : 10
+        };
+        
+        this.isRunning = true;
+        this.isPaused = false;
+        this.update();
+      }
+      
+      shoot() {
+        if (this.shootCooldown > 0 || !this.isRunning || this.isPaused || this.ammo <= 0 || this.timeFrozen) return;
+        
+        this.audio.gunshot(this.selectedWeapon);
+        this.audio.zombieHit();
+        this.ammo--;
+        this.shootCooldown = this.weapon.rof;
+        
+        const angle = Math.atan2(this.mouse.y - this.player.y, this.mouse.x - this.player.x);
+        const damage = Math.floor(this.weapon.damage * this.multiplier);
+        
+        if (this.selectedWeapon === 'shotgun') {
+          for (let i = -1; i <= 1; i++) {
+            const spreadAngle = angle + (i * 0.5);
+            this.bullets.push({
+              x: this.player.x,
+              y: this.player.y,
+              vx: Math.cos(spreadAngle) * 20,
+              vy: Math.sin(spreadAngle) * 20,
+              damage,
+              radius: 4,
+              life: 1
+            });
+          }
+        } else {
+          this.bullets.push({
+            x: this.player.x,
+            y: this.player.y,
+            vx: Math.cos(angle) * 20,
+            vy: Math.sin(angle) * 20,
+            damage,
+            radius: 5,
+            life: 1
+          });
+        }
+        
+        document.getElementById('ammoDisplay').textContent = this.ammo;
+        document.getElementById('ammoBar').textContent = `${this.ammo}/${this.maxAmmo}`;
+        document.getElementById('ammoBarFill').style.width = (this.ammo / this.maxAmmo * 100) + '%';
+        
+        if (this.ammo <= 0) this.reload();
+      }
+      
+      reload() {
+        this.audio.reload();
+        document.getElementById('powerUpDisplay').textContent = '🔄 RELOADING...';
+        setTimeout(() => {
+          this.ammo = this.maxAmmo;
+          document.getElementById('ammoDisplay').textContent = this.ammo;
+          document.getElementById('ammoBar').textContent = `${this.ammo}/${this.maxAmmo}`;
+          document.getElementById('ammoBarFill').style.width = '100%';
+          document.getElementById('powerUpDisplay').textContent = '';
+        }, 800);
+      }
+      
+      activateSkill(skillName) {
+        const skill = this.skills[skillName];
+        if (skill.cooldown > 0 || !this.isRunning || this.isPaused) return;
+        
+        this.audio.skillActivate();
+        skill.cooldown = skill.maxCooldown;
+        
+        if (skillName === 'timefreeze') {
+          this.timeFrozen = true;
+          this.freezeTimer = 2200;
+          this.zombies.forEach(z => z.frozen = true);
+        } else if (skillName === 'explosive') {
+          this.zombies.forEach(z => {
+            if (Math.hypot(z.x - this.player.x, z.y - this.player.y) < 300) {
+              z.hp -= 50 * this.multiplier;
+              this.createExplosion(z.x, z.y, 35);
+            }
+          });
+        } else if (skillName === 'heal') {
+          this.health = Math.min(this.maxHealth, this.health + 60);
+        }
+        
+        this.updateSkillUI();
+      }
+      
+      updateSkillUI() {
+        const skills = ['timefreeze', 'explosive', 'heal'];
+        skills.forEach((skill, idx) => {
+          const elem = document.getElementById(`skill${idx + 1}`);
+          const cooldown = this.skills[skill].cooldown;
+          
+          if (!elem) return;
+          if (cooldown === 0) {
+            elem.classList.remove('cooldown');
+            elem.classList.add('ready');
+          } else {
+            elem.classList.remove('ready');
+            elem.classList.add('cooldown');
+          }
+        });
+      }
+      
+      spawnZombie() {
+        const types = [
+          { size: 24, hp: 1, speed: 3.2, color: '#00ff00' },
+          { size: 32, hp: 2, speed: 2.0, color: '#ff00ff' },
+          { size: 28, hp: 2, speed: 2.6, color: '#ffff00' },
+          { size: 26, hp: 1, speed: 3.6, color: '#ff6600' },
+          { size: 36, hp: 3, speed: 1.6, color: '#00ffff' }
+        ];
+        
+        const type = types[Math.floor(Math.random() * types.length)];
+        const levelBonus = Math.min(Math.floor(this.level * 1.2), 20);
+        const speedBonus = this.level * 0.06;
+        
+        const zombie = {
+          x: Math.random() * window.innerWidth,
+          y: -type.size,
+          size: type.size,
+          hp: type.hp + levelBonus,
+          maxHp: type.hp + levelBonus,
+          speed: (type.speed * this.diffSettings.enemyMult) + speedBonus,
+          color: type.color,
+          angle: 0,
+          frozen: false,
+          points: Math.floor(30 * this.multiplier)
+        };
+        
+        if (this.wave > 30 && Math.random() < 0.15) {
+          zombie.isBoss = true;
+          zombie.hp *= 5;
+          zombie.maxHp *= 5;
+          zombie.size *= 1.8;
+          zombie.speed *= 0.6;
+          zombie.points *= 8;
+          document.getElementById('bossAlert').classList.remove('hidden');
+          this.audio.startBossBattle();
+          setTimeout(() => {
+            document.getElementById('bossAlert').classList.add('hidden');
+            this.audio.endBossBattle();
+          }, 1500);
+        }
+        
+        this.zombies.push(zombie);
+        this.activeZombies++;
+      }
+      
+      createExplosion(x, y, count = 25) {
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+          const speed = 4 + Math.random() * 8;
+          
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 3 + Math.random() * 7,
+            color: '#ff6600',
+            life: 1,
+            decay: 0.016
+          });
+        }
+      }
+      
+      updateZombies() {
+        if (this.timeFrozen) {
+          this.freezeTimer -= 16;
+          if (this.freezeTimer <= 0) {
+            this.timeFrozen = false;
+            this.zombies.forEach(z => z.frozen = false);
+          }
+        }
+        
+        this.zombieSpawnTimer--;
+        if (this.zombieSpawnTimer <= 0 && this.activeZombies < this.maxSimultaneousZombies) {
+          this.spawnZombie();
+          const baseSpawnRate = Math.max(120, 1200 - this.level * 80);
+          const adjustedRate = Math.floor(baseSpawnRate / this.spawnSpeedMultiplier);
+          this.zombieSpawnTimer = adjustedRate;
+        }
+        
+        this.zombies = this.zombies.filter(zombie => {
+          if (!zombie.frozen) {
+            const dx = this.player.x - zombie.x;
+            const dy = this.player.y - zombie.y;
+            const dist = Math.hypot(dx, dy);
+            
+            if (dist > 0) {
+              zombie.x += (dx / dist) * zombie.speed;
+              zombie.y += (dy / dist) * zombie.speed;
+            }
+          }
+          
+          zombie.angle += 0.08;
+          
+          for (let i = this.bullets.length - 1; i >= 0; i--) {
+            const bullet = this.bullets[i];
+            if (Math.hypot(bullet.x - zombie.x, bullet.y - zombie.y) < zombie.size / 2 + bullet.radius) {
+              this.bullets.splice(i, 1);
+              
+              const isCritical = Math.random() < 0.15;
+              const dmg = isCritical ? bullet.damage * 2.8 : bullet.damage;
+              zombie.hp -= dmg;
+              
+              if (isCritical) {
+                this.audio.criticalHit();
+                const floatingText = document.createElement('div');
+                floatingText.className = 'toast-notification';
+                floatingText.textContent = '💥 CRITICAL HIT!';
+                floatingText.style.top = zombie.y + 'px';
+                floatingText.style.left = zombie.x + 'px';
+                floatingText.style.fontSize = '9px';
+                document.getElementById('toastContainer').appendChild(floatingText);
+                setTimeout(() => floatingText.remove(), 1000);
+              } else {
+                this.audio.zombieHit();
+              }
+              
+              this.createExplosion(zombie.x, zombie.y, 16);
+              
+              if (zombie.hp <= 0) {
+                this.score += Math.floor(zombie.points * this.combo);
+                this.kills++;
+                this.combo = Math.min(this.combo + 1, 30);
+                this.comboTimer = 3200;
+                this.waveZombiesKilled++;
+                this.createExplosion(zombie.x, zombie.y, 50);
+                
+                if (Math.random() < 0.15) this.spawnPowerUp(zombie.x, zombie.y);
+                
+                if (this.waveZombiesKilled >= this.waveZombiesRequired) this.waveUp();
+                
+                this.activeZombies--;
+                return false;
+              }
+              break;
+            }
+          }
+          
+          if (Math.hypot(zombie.x - this.player.x, zombie.y - this.player.y) < zombie.size / 2 + 20) {
+            if (this.powerUpActive !== 'shield') {
+              this.health -= 6;
+            }
+          }
+          
+          return zombie.y < window.innerHeight + zombie.size;
+        });
+        
+        document.getElementById('zombieCountDisplay').textContent = this.activeZombies;
+        document.getElementById('killCountDisplay').textContent = this.kills;
+        document.getElementById('spawnSpeedDisplay').textContent = this.spawnSpeedMultiplier.toFixed(1) + 'x';
+      }
+      
+      spawnPowerUp(x, y) {
+        const types = ['health', 'ammo', 'multiplier', 'shield', 'rapid', 'damage'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const icons = { health: '❤️', ammo: '🔫', multiplier: '⚡', shield: '🛡️', rapid: '💨', damage: '💥' };
+        
+        this.powerUps.push({
+          x,
+          y,
+          type,
+          icon: icons[type],
+          angle: 0,
+          vy: -1.8
+        });
+      }
+      
+      updatePowerUps() {
+        this.powerUps = this.powerUps.filter(pu => {
+          pu.y += pu.vy;
+          pu.angle += 0.14;
+          
+          if (Math.hypot(pu.x - this.player.x, pu.y - this.player.y) < 50) {
+            this.audio.powerUp();
+            
+            if (pu.type === 'health') this.health = Math.min(this.maxHealth, this.health + 50);
+            else if (pu.type === 'ammo') this.ammo = Math.min(this.maxAmmo, this.ammo + 25);
+            else if (pu.type === 'multiplier') this.multiplier = Math.min(this.multiplier + 0.7, 7.0);
+            else if (pu.type === 'shield') { this.powerUpActive = 'shield'; this.powerUpTimer = 5500; }
+            else if (pu.type === 'rapid') { this.powerUpActive = 'rapid'; this.powerUpTimer = 4000; }
+            else if (pu.type === 'damage') this.weapon.damage += 8;
+            
+            document.getElementById('powerUpDisplay').textContent = `${pu.icon} +${pu.type.toUpperCase()}`;
+            return false;
+          }
+          
+          return pu.y < window.innerHeight + 50;
+        });
+        
+        if (this.powerUpTimer > 0) {
+          this.powerUpTimer -= 16;
+          if (this.powerUpActive === 'shield') {
+            document.getElementById('powerUpDisplay').textContent = `🛡️ SHIELD (${(this.powerUpTimer / 1000).toFixed(1)}s)`;
+          } else if (this.powerUpActive === 'rapid') {
+            document.getElementById('powerUpDisplay').textContent = `💨 RAPID (${(this.powerUpTimer / 1000).toFixed(1)}s)`;
+          }
+        } else {
+          this.powerUpActive = null;
+        }
+        
+        if (this.comboTimer > 0) {
+          this.comboTimer -= 16;
+        } else {
+          this.combo = 1;
+        }
+        
+        Object.keys(this.skills).forEach(skill => {
+          if (this.skills[skill].cooldown > 0) this.skills[skill].cooldown--;
+        });
+      }
+      
+      updateBullets() {
+        this.bullets = this.bullets.filter(bullet => {
+          bullet.x += bullet.vx;
+          bullet.y += bullet.vy;
+          bullet.life -= 0.016;
+          return bullet.life > 0 && bullet.x > -50 && bullet.x < window.innerWidth + 50;
+        });
+      }
+      
+      updateParticles() {
+        this.particles = this.particles.filter(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.18;
+          p.life -= p.decay;
+          p.size *= 0.90;
+          return p.life > 0;
+        });
+      }
+      
+      waveUp() {
+        this.audio.waveUp();
+        this.wave++;
+        this.waveZombiesKilled = 0;
+        this.waveZombiesRequired = Math.floor(40 + this.wave * 3.5);
+        this.level = Math.floor(this.wave / 2) + 1;
+        this.spawnSpeedMultiplier = Math.min(this.spawnSpeedMultiplier + 0.15, 8.0);
+        
+        if (this.level > 200) this.level = 200;
+        
+        const alert = document.getElementById('waveAlert');
+        alert.textContent = `🌟 WAVE ${this.wave} CLEARED! LEVEL ${this.level} • SPAWN SPEED: ${this.spawnSpeedMultiplier.toFixed(1)}x 🌟`;
+        alert.classList.remove('hidden');
+        setTimeout(() => alert.classList.add('hidden'), 2000);
+      }
+      
+      togglePause() {
+        if (!this.isRunning) return;
+        if (this.isPaused) this.resume();
+        else this.pause();
+      }
+      
+      pause() {
+        this.isPaused = true;
+        this.audio.pauseBGM();
+        this.audio.pauseAmbient();
+        document.getElementById('pauseMenu').classList.remove('hidden');
+        document.getElementById('pauseStats').innerHTML = `
+          <div>SCORE: ${this.score.toLocaleString()}</div>
+          <div>LEVEL: ${this.level} | WAVE: ${this.wave}</div>
+          <div>COMBO: ${this.combo}x | KILLS: ${this.kills}</div>
+          <div>ZOMBIES ACTIVE: ${this.activeZombies}</div>
+        `;
+      }
+      
+      resume() {
+        this.isPaused = false;
+        this.audio.playBGM();
+        this.audio.playAmbient();
+        document.getElementById('pauseMenu').classList.add('hidden');
+        this.update();
+      }
+      
+      update() {
+        if (!this.isRunning || this.isPaused) return;
+        
+        this.elapsedTime = Math.floor((Date.now() - this.gameStartTime) / 1000);
+        
+        this.shootCooldown = Math.max(0, this.shootCooldown - 1);
+        if (this.powerUpActive === 'rapid') {
+          if (this.shootCooldown === 0) {
+            this.shootCooldown = 1;
+            this.shoot();
+          }
+        }
+        
+        this.player.x = Math.max(30, Math.min(window.innerWidth - 30, this.player.x));
+        this.player.y = Math.max(30, Math.min(window.innerHeight - 30, this.player.y));
+        
+        if (device.isDesktop) {
+          const dx = this.mouse.x - this.player.x;
+          const dy = this.mouse.y - this.player.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist > 5) {
+            this.player.x += (dx / dist) * Math.min(this.player.speed, dist);
+            this.player.y += (dy / dist) * Math.min(this.player.speed, dist);
+          }
+        }
+        
+        this.updateZombies();
+        this.updateBullets();
+        this.updatePowerUps();
+        this.updateParticles();
+        this.updateSkillUI();
+        
+        document.getElementById('scoreDisplay').textContent = this.score.toLocaleString();
+        document.getElementById('levelDisplay').textContent = this.level;
+        document.getElementById('healthDisplay').textContent = Math.ceil(this.health);
+        document.getElementById('waveDisplay').textContent = this.wave;
+        document.getElementById('comboDisplay').textContent = this.combo + 'x';
+        document.getElementById('multiplierDisplay').textContent = this.multiplier.toFixed(1) + 'x';
+        
+        const mins = Math.floor(this.elapsedTime / 60);
+        const secs = this.elapsedTime % 60;
+        document.getElementById('timeDisplay').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        
+        const levelProgress = Math.min((this.waveZombiesKilled / this.waveZombiesRequired) * 100, 100);
+        document.getElementById('waveProgress').style.width = levelProgress + '%';
+        
+        if (this.health <= 0) {
+          this.gameOver();
+          return;
+        }
+        
+        this.render();
+        requestAnimationFrame(() => this.update());
+      }
+      
+      render() {
+        const ctx = this.ctx;
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        
+        ctx.fillStyle = '#0a0e27';
+        ctx.fillRect(0, 0, w, h);
+        
+        this.particles.forEach(p => {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        
+        this.powerUps.forEach(pu => {
+          ctx.save();
+          ctx.translate(pu.x, pu.y);
+          ctx.rotate(pu.angle);
+          ctx.font = 'bold 20px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.shadowColor = '#00ff00';
+          ctx.shadowBlur = 12;
+          ctx.fillText(pu.icon, 0, 0);
+          ctx.restore();
+        });
+        
+        this.bullets.forEach(b => {
+          ctx.save();
+          ctx.translate(b.x, b.y);
+          const angle = Math.atan2(b.vy, b.vx);
+          ctx.rotate(angle);
+          
+          ctx.fillStyle = '#00ff00';
+          ctx.shadowColor = '#00ff00';
+          ctx.shadowBlur = 10;
+          ctx.fillRect(-3, -1.5, 10, 3);
+          
+          ctx.restore();
+        });
+        
+        this.zombies.forEach(z => {
+          ctx.save();
+          ctx.translate(z.x, z.y);
+          ctx.rotate(z.angle * 0.07);
+          
+          ctx.globalAlpha = z.frozen ? 0.5 : 1;
+          
+          ctx.shadowColor = z.isBoss ? '#ff0000' : z.color;
+          ctx.shadowBlur = z.isBoss ? 30 : 14;
+          
+          ctx.fillStyle = z.color;
+          ctx.beginPath();
+          ctx.arc(0, 0, z.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.fillStyle = '#fff';
+          ctx.beginPath();
+          ctx.arc(-z.size / 5, -z.size / 6, z.size / 12, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(z.size / 5, -z.size / 6, z.size / 12, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.fillStyle = '#000';
+          ctx.beginPath();
+          ctx.arc(-z.size / 5, -z.size / 6, z.size / 28, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(z.size / 5, -z.size / 6, z.size / 28, 0, Math.PI * 2);
+          ctx.fill();
+          
+          if (z.isBoss) {
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, z.size / 2 + 7, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          
+          const barWidth = z.size * 1.4;
+          const healthPct = z.hp / z.maxHp;
+          ctx.globalAlpha = 1;
+          ctx.shadowColor = 'transparent';
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+          ctx.fillRect(-barWidth / 2, -z.size / 2 - 15, barWidth, 5);
+          ctx.fillStyle = z.isBoss ? '#ff0000' : (healthPct > 0.5 ? '#00ff00' : healthPct > 0.25 ? '#ffff00' : '#ff0000');
+          ctx.fillRect(-barWidth / 2, -z.size / 2 - 15, barWidth * healthPct, 5);
+          
+          ctx.restore();
+        });
+        
+        ctx.save();
+        ctx.translate(this.player.x, this.player.y);
+        
+        if (this.powerUpActive === 'shield') {
+          ctx.strokeStyle = '#00ffff';
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = '#00ffff';
+          ctx.shadowBlur = 22;
+          ctx.beginPath();
+          ctx.arc(0, 0, 55, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        
+        ctx.font = 'bold 32px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#00ff00';
+        ctx.shadowBlur = 16;
+        ctx.fillText(this.selectedAvatar, 0, 0);
+        
+        ctx.restore();
+      }
+      
+      async gameOver() {
+        this.isRunning = false;
+        this.audio.pauseBGM();
+        this.audio.pauseAmbient();
+        this.audio.gameOver();
+        this.audio.playVictory();
+        
+        document.getElementById('finalScore').textContent = this.score.toLocaleString();
+        document.getElementById('finalLevel').textContent = this.level;
+        document.getElementById('finalZombies').textContent = this.kills;
+        const mins = Math.floor(this.elapsedTime / 60);
+        const secs = this.elapsedTime % 60;
+        document.getElementById('finalTime').textContent = `${mins}m ${secs}s`;
+        
+        document.getElementById('gameOverScreen').classList.remove('hidden');
+        
+        try {
+          await window.dataSdk.create({
+            player_name: this.playerName,
+            high_score: this.score,
+            level_reached: this.level,
+            zombies_killed: this.kills,
+            playtime_seconds: this.elapsedTime,
+            difficulty: this.selectedDifficulty,
+            weapon_used: this.weapon.name,
+            max_spawn_speed: this.spawnSpeedMultiplier,
+            created_at: new Date().toISOString()
+          });
+        } catch (e) {}
+      }
+    }
+    
+    let game = null;
+    let highScores = [];
+    let selectedAvatar = '😎';
+    let selectedWeapon = 'pistol';
+    let selectedDifficulty = 'easy';
+    let audioEngine = new AdvancedAudioEngine();
+    
+    const dataHandler = {
+      onDataChanged(data) {
+        highScores = data;
+        renderLeaderboard();
+      }
+    };
+    
+    function renderLeaderboard() {
+      const list = document.getElementById('leaderboardList');
+      if (highScores.length === 0) {
+        list.innerHTML = '<p class="text-center text-gray-500 text-xs py-1">No scores yet</p>';
+        return;
+      }
+      
+      const sorted = [...highScores].sort((a, b) => b.high_score - a.high_score).slice(0, 8);
+      list.innerHTML = sorted.map((score, i) => `
+        <div class="flex justify-between text-xs p-0.5 rounded ${i === 0 ? 'bg-yellow-500/20' : 'hover:bg-white/5'} text-green-400">
+          <span>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1)}</span>
+          <span class="truncate flex-1 text-center">${score.player_name}</span>
+          <span class="font-bold">${score.high_score.toLocaleString()}</span>
+        </div>
+      `).join('');
+    }
+    
+    function showMenu() {
+      document.getElementById('mainMenu').classList.remove('hidden');
+      document.getElementById('gameScreen').classList.add('hidden');
+      document.getElementById('gameOverScreen').classList.add('hidden');
+      document.getElementById('app').classList.remove('game-is-running');
+    }
+    
+    function showGame() {
+      document.getElementById('mainMenu').classList.add('hidden');
+      document.getElementById('gameScreen').classList.remove('hidden');
+      document.getElementById('app').classList.add('game-is-running');
+    }
+    
+    function startGame() {
+      const playerName = document.getElementById('playerNameInput').value.trim() || 'FIGHTER';
+      showGame();
+      game = new EliteSlayerGame();
+      game.start(playerName, selectedAvatar, selectedWeapon, selectedDifficulty);
+    }
+    
+    document.querySelectorAll('[data-avatar]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-avatar]').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedAvatar = this.dataset.avatar;
+      });
+    });
+    
+    document.querySelectorAll('[data-weapon]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-weapon]').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedWeapon = this.dataset.weapon;
+      });
+    });
+    
+    document.querySelectorAll('[data-difficulty]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-difficulty]').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedDifficulty = this.dataset.difficulty;
+      });
+    });
+    
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('resumeBtn').addEventListener('click', () => { if (game) game.resume(); });
+    document.getElementById('quitBtn').addEventListener('click', () => { if (game) game.isRunning = false; showMenu(); });
+    document.getElementById('playAgainBtn').addEventListener('click', () => startGame());
+    document.getElementById('mainMenuBtn').addEventListener('click', showMenu);
+    
+    document.getElementById('skill1').addEventListener('click', () => { if (game) game.activateSkill('timefreeze'); });
+    document.getElementById('skill2').addEventListener('click', () => { if (game) game.activateSkill('explosive'); });
+    document.getElementById('skill3').addEventListener('click', () => { if (game) game.activateSkill('heal'); });
+
+    // Audio Control Buttons
+    document.getElementById('bgmToggle').addEventListener('click', function() {
+      const enabled = audioEngine.toggleBGM();
+      this.classList.toggle('off', !enabled);
+      this.textContent = enabled ? '🎵 BGM' : '🔇 BGM';
+    });
+
+    document.getElementById('ambientToggle').addEventListener('click', function() {
+      const enabled = audioEngine.toggleAmbient();
+      this.classList.toggle('off', !enabled);
+      this.textContent = enabled ? '🌍 AMB' : '🔇 AMB';
+    });
+
+    document.getElementById('sfxToggle').addEventListener('click', function() {
+      const enabled = audioEngine.toggleSFX();
+      this.classList.toggle('off', !enabled);
+      this.textContent = enabled ? '🔊 SFX' : '🔇 SFX';
+    });
+
+    document.getElementById('masterToggle').addEventListener('click', function() {
+      const enabled = audioEngine.toggleMaster();
+      this.classList.toggle('off', !enabled);
+      this.textContent = enabled ? '🔇 MUTE' : '🔊 MUTE';
+    });
+    
+    async function init() {
+      try {
+        await window.dataSdk.init(dataHandler);
+      } catch (e) {}
+      showMenu();
+    }
+    
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd1b553b6402b1c',t:'MTc3MDk1ODI2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
